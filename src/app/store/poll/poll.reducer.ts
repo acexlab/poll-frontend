@@ -86,6 +86,16 @@ export const pollReducer = createReducer(
     polls: state.polls.map(p => p.id === id ? { ...p, isEnabled: false } : p),
     activePolls: state.activePolls.filter(p => p.id !== id)
   })),
+  on(PollActions.enableViewResultsSuccess, (state, { id }) => ({
+    ...state,
+    polls: state.polls.map(p => p.id === id ? { ...p, showResults: true } : p),
+    activePolls: state.activePolls.map(p => p.id === id ? { ...p, showResults: true } : p)
+  })),
+  on(PollActions.disableViewResultsSuccess, (state, { id }) => ({
+    ...state,
+    polls: state.polls.map(p => p.id === id ? { ...p, showResults: false } : p),
+    activePolls: state.activePolls.map(p => p.id === id ? { ...p, showResults: false } : p)
+  })),
   on(PollActions.deletePoll, (state) => ({
     ...state,
     loading: true,

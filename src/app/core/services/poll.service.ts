@@ -52,4 +52,12 @@ export class PollService {
   deletePoll(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+
+  enableViewResults(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/enable-results`, {});
+  }
+
+  disableViewResults(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/disable-results`, {});
+  }
 }

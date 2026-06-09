@@ -110,3 +110,35 @@ export const deletePollFailure = createAction(
   '[Poll] Delete Poll Failure',
   props<{ error: string }>()
 );
+
+// Enable View Results
+export const enableViewResults = createAction(
+  '[Poll] Enable View Results',
+  props<{ id: number }>()
+);
+
+export const enableViewResultsSuccess = createAction(
+  '[Poll] Enable View Results Success',
+  props<{ id: number }>()
+);
+
+export const enableViewResultsFailure = createAction(
+  '[Poll] Enable View Results Failure',
+  props<{ error: string }>()
+);
+
+// Disable View Results
+export const disableViewResults = createAction(
+  '[Poll] Disable View Results',
+  props<{ id: number }>()
+);
+
+export const disableViewResultsSuccess = createAction(
+  '[Poll] Disable View Results Success',
+  props<{ id: number }>()
+);
+
+export const disableViewResultsFailure = createAction(
+  '[Poll] Disable View Results Failure',
+  props<{ error: string }>()
+);

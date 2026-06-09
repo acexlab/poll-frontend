@@ -168,4 +168,48 @@ export class PollEffects {
       )
     )
   );
+
+  enableViewResults$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PollActions.enableViewResults),
+      tap(() => this.spinner.show()),
+      mergeMap(action =>
+        this.pollService.enableViewResults(action.id).pipe(
+          map(() => {
+            this.spinner.hide();
+            this.toastr.success('Poll results visibility enabled successfully!', 'Success');
+            return PollActions.enableViewResultsSuccess({ id: action.id });
+          }),
+          catchError(error => {
+            this.spinner.hide();
+            const errorMsg = error.error?.message || 'Failed to enable results visibility.';
+            this.toastr.error(errorMsg, 'Error');
+            return of(PollActions.enableViewResultsFailure({ error: errorMsg }));
+          })
+        )
+      )
+    )
+  );
+
+  disableViewResults$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PollActions.disableViewResults),
+      tap(() => this.spinner.show()),
+      mergeMap(action =>
+        this.pollService.disableViewResults(action.id).pipe(
+          map(() => {
+            this.spinner.hide();
+            this.toastr.warning('Poll results visibility disabled successfully!', 'Disabled');
+            return PollActions.disableViewResultsSuccess({ id: action.id });
+          }),
+          catchError(error => {
+            this.spinner.hide();
+            const errorMsg = error.error?.message || 'Failed to disable results visibility.';
+            this.toastr.error(errorMsg, 'Error');
+            return of(PollActions.disableViewResultsFailure({ error: errorMsg }));
+          })
+        )
+      )
+    )
+  );
 }

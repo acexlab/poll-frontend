@@ -9,6 +9,7 @@ export interface Poll {
   title: string;
   description: string;
   isEnabled: boolean;
+  showResults: boolean;
   createdBy: number;
   createdAt: string;
   options: PollOption[];

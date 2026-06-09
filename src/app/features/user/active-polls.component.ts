@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
 import * as PollActions from '../../store/poll/poll.actions';
 import * as VoteActions from '../../store/vote/vote.actions';
 import { selectActivePolls, selectPollLoading } from '../../store/poll/poll.selectors';
@@ -72,21 +73,29 @@ import { PollResult } from '../../core/models/poll.model';
               <div class="results-preview">
                 <h5>Current Standings</h5>
                 
-                <div class="results-bars" *ngIf="pollResults[poll.id] as result; else loadingResults">
-                  <div *ngFor="let item of result.results" class="result-row">
-                    <div class="result-info">
-                      <span class="result-text">{{ item.optionText }}</span>
-                      <span class="result-pct">{{ item.percentage }}% ({{ item.voteCount }} votes)</span>
+                <div *ngIf="poll.showResults; else resultsHidden">
+                  <div class="results-bars" *ngIf="pollResults[poll.id] as result; else loadingResults">
+                    <div *ngFor="let item of result.results" class="result-row">
+                      <div class="result-info">
+                        <span class="result-text">{{ item.optionText }}</span>
+                        <span class="result-pct">{{ item.percentage }}% ({{ item.voteCount }} votes)</span>
+                      </div>
+                      <div class="progress-container">
+                        <div class="progress-bar" [style.width.%]="item.percentage"></div>
+                      </div>
                     </div>
-                    <div class="progress-container">
-                      <div class="progress-bar" [style.width.%]="item.percentage"></div>
-                    </div>
+                    <div class="total-count">Total Votes: {{ result.totalVotes }}</div>
                   </div>
-                  <div class="total-count">Total Votes: {{ result.totalVotes }}</div>
+
+                  <ng-template #loadingResults>
+                    <div class="mini-loading">Loading results...</div>
+                  </ng-template>
                 </div>
 
-                <ng-template #loadingResults>
-                  <div class="mini-loading">Loading results...</div>
+                <ng-template #resultsHidden>
+                  <div class="results-hidden-msg">
+                    Results are currently hidden by the administrator.
+                  </div>
                 </ng-template>
               </div>
             </div>
@@ -326,15 +335,21 @@ export class ActivePollsComponent implements OnInit {
     this.store.dispatch(PollActions.loadActivePolls());
     this.store.dispatch(VoteActions.loadMyVotes());
 
-    this.myVotesByPoll$.subscribe(votesMap => {
+    combineLatest([this.polls$, this.myVotesByPoll$]).subscribe(([polls, votesMap]) => {
       Object.keys(votesMap).forEach(key => {
         const pollId = Number(key);
         const userVote = votesMap[pollId];
         this.userVotes[pollId] = userVote.votedOptionText;
         
-        if (!this.pollResults[pollId]) {
-          this.voteService.getResults(pollId).subscribe(results => {
-            this.pollResults[pollId] = results;
+        const poll = polls.find(p => p.id === pollId);
+        if (poll && poll.showResults && !this.pollResults[pollId]) {
+          this.voteService.getResults(pollId).subscribe({
+            next: results => {
+              this.pollResults[pollId] = results;
+            },
+            error: err => {
+              console.error('Failed to load poll results', err);
+            }
           });
         }
       });

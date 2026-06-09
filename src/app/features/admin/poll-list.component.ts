@@ -28,17 +28,22 @@ import { Poll, PollResult, Participant } from '../../core/models/poll.model';
       <div class="polls-grid" *ngIf="!(loading$ | async)">
         <div *ngFor="let poll of polls$ | async" class="glass-panel poll-item-card">
           <div class="poll-header-info">
-            <div class="flex-between">
-              <span class="badge" [class.badge-active]="poll.isEnabled" [class.badge-inactive]="!poll.isEnabled">
-                {{ poll.isEnabled ? 'Enabled' : 'Disabled' }}
-              </span>
+            <div class="flex-between" style="flex-wrap: wrap; gap: 6px;">
+              <div style="display: flex; gap: 6px;">
+                <span class="badge" [class.badge-active]="poll.isEnabled" [class.badge-inactive]="!poll.isEnabled">
+                  {{ poll.isEnabled ? 'Enabled' : 'Disabled' }}
+                </span>
+                <span class="badge" [class.badge-results-active]="poll.showResults" [class.badge-results-inactive]="!poll.showResults">
+                  Results: {{ poll.showResults ? 'Visible' : 'Hidden' }}
+                </span>
+              </div>
               <span class="created-at">{{ poll.createdAt | date:'mediumDate' }}</span>
             </div>
             <h4>{{ poll.title }}</h4>
             <p>{{ poll.description }}</p>
           </div>
 
-          <div class="poll-actions">
+          <div class="poll-actions" style="flex-wrap: wrap; gap: 8px;">
             <!-- Status Toggle -->
             <button 
               *ngIf="!poll.isEnabled" 
@@ -53,6 +58,22 @@ import { Poll, PollResult, Participant } from '../../core/models/poll.model';
               class="glass-btn glass-btn-secondary btn-sm text-red"
             >
               Disable
+            </button>
+
+            <!-- Results Visibility Toggle -->
+            <button 
+              *ngIf="!poll.showResults" 
+              (click)="onEnableResults(poll.id)" 
+              class="glass-btn glass-btn-primary btn-sm"
+            >
+              Enable Results
+            </button>
+            <button 
+              *ngIf="poll.showResults" 
+              (click)="onDisableResults(poll.id)" 
+              class="glass-btn glass-btn-secondary btn-sm text-red"
+            >
+              Disable Results
             </button>
 
             <!-- Results Trigger -->
@@ -659,6 +680,14 @@ export class PollListComponent implements OnInit {
 
   onDisable(id: number): void {
     this.store.dispatch(PollActions.disablePoll({ id }));
+  }
+
+  onEnableResults(id: number): void {
+    this.store.dispatch(PollActions.enableViewResults({ id }));
+  }
+
+  onDisableResults(id: number): void {
+    this.store.dispatch(PollActions.disableViewResults({ id }));
   }
 
   onDeletePoll(id: number): void {
