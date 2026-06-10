@@ -48,28 +48,6 @@ Chart.register(...registerables);
             <canvas #chartCanvas></canvas>
           </div>
         </div>
-
-        <div class="glass-panel info-card">
-          <h4>System Information</h4>
-          <div class="info-list">
-            <div class="info-item">
-              <span class="info-label">Environment:</span>
-              <span class="info-val badge badge-active">Development</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Database:</span>
-              <span class="info-val badge badge-active">MySQL</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Frontend Framework:</span>
-              <span class="info-val">Angular 22.0</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Backend Engine:</span>
-              <span class="info-val">.NET 8.0</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   `,
@@ -109,21 +87,16 @@ Chart.register(...registerables);
     }
     .charts-section {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1fr;
       gap: 24px;
     }
-    @media (max-width: 900px) {
-      .charts-section {
-        grid-template-columns: 1fr;
-      }
-    }
-    .chart-card, .info-card {
+    .chart-card {
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       padding: 24px;
     }
-    .chart-card h4, .info-card h4 {
+    .chart-card h4 {
       font-size: 1rem;
       font-weight: 700;
       color: #0f172a;
@@ -137,28 +110,6 @@ Chart.register(...registerables);
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .info-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .info-label {
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-    }
-    .info-val {
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #0f172a;
     }
   `]
 })
