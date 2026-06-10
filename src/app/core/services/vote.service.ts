@@ -8,7 +8,7 @@ import { PollResult, UserVote } from '../models/poll.model';
 })
 export class VoteService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5273/api/votes';
+  private apiUrl = 'http://localhost:5095/api/votes';
 
   castVote(pollId: number, pollOptionId: number): Observable<any> {
     return this.http.post<any>(this.apiUrl, { pollId, pollOptionId });

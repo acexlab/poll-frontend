@@ -9,8 +9,8 @@ import { User } from '../models/user.model';
 })
 export class PollService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5273/api/polls';
-  private adminUrl = 'http://localhost:5273/api/admin';
+  private apiUrl = 'http://localhost:5095/api/polls';
+  private adminUrl = 'http://localhost:5095/api/admin';
 
   getPolls(page: number = 1, pageSize: number = 10): Observable<PaginatedResult<Poll>> {
     return this.http.get<PaginatedResult<Poll>>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
