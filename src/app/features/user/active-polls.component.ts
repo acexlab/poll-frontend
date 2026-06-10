@@ -336,16 +336,20 @@ export class ActivePollsComponent implements OnInit {
     this.store.dispatch(VoteActions.loadMyVotes());
 
     combineLatest([this.polls$, this.myVotesByPoll$]).subscribe(([polls, votesMap]) => {
+      const newUserVotes = { ...this.userVotes };
       Object.keys(votesMap).forEach(key => {
         const pollId = Number(key);
         const userVote = votesMap[pollId];
-        this.userVotes[pollId] = userVote.votedOptionText;
+        newUserVotes[pollId] = userVote.votedOptionText;
         
         const poll = polls.find(p => p.id === pollId);
         if (poll && poll.showResults && !this.pollResults[pollId]) {
           this.voteService.getResults(pollId).subscribe({
             next: results => {
-              this.pollResults[pollId] = results;
+              this.pollResults = {
+                ...this.pollResults,
+                [pollId]: results
+              };
             },
             error: err => {
               console.error('Failed to load poll results', err);
@@ -353,6 +357,7 @@ export class ActivePollsComponent implements OnInit {
           });
         }
       });
+      this.userVotes = newUserVotes;
     });
   }
 
